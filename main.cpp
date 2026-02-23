@@ -1,8 +1,64 @@
 #include <iostream>
 #include <array>
+#include <ostream>
+#include <vector>
+
 #include "include/Example.h"
 // This also works if you do not want `include/`, but some editors might not like it
 // #include "Example.h"
+
+class Student {
+    std::string nume;
+    int grupa;
+public:
+Student(const std::string &nume, int grupa)
+        : nume(nume),
+          grupa(grupa) {
+    }
+ Student(const Student &other)
+        : nume(other.nume),
+          grupa(other.grupa) {
+    }
+
+    Student & operator=(const Student &other) {
+        if (this == &other)
+            return *this;
+        nume = other.nume;
+        grupa = other.grupa;
+        return *this;
+    }
+
+    ~Student() = default;
+ friend std::ostream & operator<<(std::ostream &os, const Student &obj) {
+        return os
+               << "nume: " << obj.nume
+               << " grupa: " << obj.grupa;
+    }
+};
+
+class Facultate {
+    std::string nume = "FMI";
+    std::vector<Student> studenti;
+
+public:
+    explicit Facultate(const std::vector<Student> &studenti)
+        : studenti(studenti) {
+    }
+ Facultate(const std::string &nume, const std::vector<Student> &studenti)
+        : nume(nume),
+          studenti(studenti) {
+    }
+
+    friend std::ostream & operator<<(std::ostream &os, const Facultate &obj) {
+        os << "nume: " << obj.nume << "\n";
+        os << "studenti:\n";
+        for (const auto &student : obj.studenti) {
+            os << student << "\n";
+        }
+        return os;
+    }
+};
+
 
 int main() {
     std::cout << "Hello, 1311!\n";
