@@ -84,8 +84,8 @@ public:
 
 class Sala {
     std::vector<GrupIluminare> grupLumina;
-    int numar;
-    double zgomot;
+    int numar{};
+    double zgomot{};
     Cuier m_cuier;
 
 public:
@@ -101,7 +101,7 @@ public:
         return os;
     }
 
-    Sala(const Cuier &cuier) : m_cuier(cuier) {
+    explicit Sala(const Cuier &cuier) : m_cuier(cuier) {
     }
 
     Sala(const std::vector<GrupIluminare> &grup_lumina, const Cuier &m_cuier)
@@ -143,10 +143,6 @@ public:
 
     void set_numar(int numar_) {
         this->numar = numar_;
-    }
-
-    void set_cuier(const Cuier &cuier) {
-        this->m_cuier = cuier;
     }
 };
 
