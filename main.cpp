@@ -61,7 +61,7 @@ public:
 
 
 int main() {
-    std::cout << "Hello, 1311!\n";
+    std::cout << "Hello, 1311 la 8 dimineata!\n";
     Example e1;
     e1.g();
     std::array<int, 100> v{};
