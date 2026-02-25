@@ -75,18 +75,6 @@ public:
         return m_nr_haine;
     }
 
-    void set_nr_haine(int nr_haine) {
-        this->m_nr_haine = nr_haine;
-    }
-
-    int get_nr_randuri() const {
-        return m_nr_randuri;
-    }
-
-    void set_nr_randuri(int nr_randuri) {
-        this->m_nr_randuri = nr_randuri;
-    }
-
     friend std::ostream &operator<<(std::ostream &os, const Cuier &cuier) {
         os << cuier.m_nr_haine << " " << cuier.m_nr_randuri;
         return os;
@@ -145,32 +133,16 @@ public:
           m_cuier(m_cuier) {
     }
 
-    [[nodiscard]] std::vector<GrupIluminare> get_grup_lumina() const {
-        return grupLumina;
-    }
-
     void set_grup_lumina(const std::vector<GrupIluminare> &grup_lumina) {
         grupLumina = grup_lumina;
     }
 
-    [[nodiscard]] int get_numar() const {
-        return numar;
+    void set_zgomot(double zgomot_) {
+        this->zgomot = zgomot_;
     }
 
-    void set_numar(int numar) {
-        this->numar = numar;
-    }
-
-    [[nodiscard]] double get_zgomot() const {
-        return zgomot;
-    }
-
-    void set_zgomot(double zgomot) {
-        this->zgomot = zgomot;
-    }
-
-    [[nodiscard]] Cuier get_cuier() const {
-        return m_cuier;
+    void set_numar(int numar_) {
+        this->numar = numar_;
     }
 
     void set_cuier(const Cuier &cuier) {
