@@ -32,6 +32,10 @@ int Cuier::get_nr_haine() const {
     return m_nr_haine;
 }
 
+void Cuier::adauga_haine() {
+    m_nr_haine++;
+}
+
 std::ostream & operator<<(std::ostream &os, const Cuier &cuier) {
     os << cuier.m_nr_haine << " " << cuier.m_nr_randuri;
     return os;

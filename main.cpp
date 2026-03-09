@@ -1,6 +1,6 @@
 #include <iostream>
-#include <array>
 #include <ostream>
+#include <utility>
 #include <vector>
 
 #include "Cuier.h"
@@ -14,32 +14,44 @@ class Baza {
 private: // (1)
 protected:
     int x;
-    void f() { std::cout << "f\n"; }
+    void f() const { std::cout << "f" << x << "\n"; }
+
 public:
-Baza(const Baza &other)
+    Baza(const Baza &other)
         : x(other.x) {
+        std::cout << "Constructor copiere Baza: " << x << "\n";
+        f();
     }
 
-    Baza & operator=(const Baza &other) {
+    Baza &operator=(const Baza &other) {
         if (this == &other)
             return *this;
         x = other.x;
         return *this;
     }
 
-    explicit Baza(int x_) : x(x_) { std::cout << "Constructor Bază: " << x << "\n"; f(); }
-    void g() { std::cout << "g\n"; }
+    explicit Baza(int x_) : x(x_) {
+        std::cout << "Constructor Bază: " << x << "\n";
+        f();
+    }
+
+    void g() {
+        std::cout << "g\n";
+        x++;
+    }
 };
 
 class Derivata : protected Baza {
     int y{};
+
 public:
-Derivata(const Derivata &other)
+    Derivata(const Derivata &other)
         : Baza(other),
           y(other.y) {
+        std::cout << "Constr copiere Derivata: " << y << "\n";
     }
 
-    Derivata & operator=(const Derivata &other) {
+    Derivata &operator=(const Derivata &other) {
         if (this == &other)
             return *this;
         Baza::operator =(other);
@@ -47,16 +59,23 @@ Derivata(const Derivata &other)
         return *this;
     }
 
-    Derivata() : Baza(1) { std::cout << "Constructor 1 Derivată: " << x << "\n"; f(); }
- explicit Derivata(int y)
-        : Baza(2), y(y) {
+    Derivata() : Baza(1) {
+        std::cout << "Constructor 1 Derivată: " << x << "\n";
+        f();
     }
 
+    explicit Derivata(int y)
+        : Baza(2), y(y) {
+    }
+    void f2() {
+        std::cout << "f2\n";
+    }
 };
 
 class Derivata2 : public Derivata {
-    int k;
-    int abc;
+    int k = 2;
+    int abc = 5;
+
 public:
     Derivata2(int y, int k, int abc)
         : Derivata(y),
@@ -67,7 +86,8 @@ public:
     Derivata2(const Derivata2 &other)
         : Derivata(other) {
     }
- explicit Derivata2(const Derivata &other)
+
+    explicit Derivata2(const Derivata &other)
         : Derivata(other) {
     }
 
@@ -75,24 +95,41 @@ public:
         : Derivata(y) {
     }
 
-    Derivata2 & operator=(const Derivata2 &other) {
+    Derivata2 &operator=(const Derivata2 &other) {
         if (this == &other)
             return *this;
         Derivata::operator =(other);
+        this->k = other.k;
+        this->abc = other.abc;
+        std::cout << "operator= Derivata2 " << x << "\n";
         return *this;
     }
 
-    Derivata2() : Derivata() { std::cout << "Constructor 1 Derivată2: " << x << "\n"; f(); }
+    Derivata2() : Derivata() {
+        std::cout << "Constructor 1 Derivată2: " << x << "\n";
+        f();
+    }
 };
 
 class curs {
     std::string prof;
     int nr = 10;
+
 public:
-    curs(const std::string& prof_) : prof(prof_) { std::cout << "constructor curs: " << prof << "\n"; }
-    curs(const std::string& prof_, int nr_) : prof(prof_), nr(nr_) { std::cout << "constructor curs: " << prof << "\n"; }
-    curs(int nr_, const std::string& prof_) : prof(prof_), nr(nr_) { std::cout << "constructor curs: " << prof << "\n"; }
-    friend std::ostream& operator<<(std::ostream& os, const curs& c) { os << "curs: " << c.prof << "\n"; return os; }
+    explicit curs(std::string prof_) : prof(std::move(prof_)) { std::cout << "constructor curs: " << prof << "\n"; }
+
+    curs(std::string prof_, int nr_) : prof(std::move(prof_)), nr(nr_) {
+        std::cout << "constructor curs: " << prof << "\n";
+    }
+
+    curs(int nr_, std::string prof_) : prof(std::move(prof_)), nr(nr_) {
+        std::cout << "constructor curs: " << prof << " " << nr << "\n";
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const curs &c) {
+        os << "curs: " << c.prof << " " << c.nr << "\n";
+        return os;
+    }
 };
 
 
@@ -104,8 +141,11 @@ int main() {
     curs_obligatoriu oop{"test"};
     Baza b(2);
     Derivata d;
+    b.g();
+    d.f2();
     Cuier c1{2, 2}, c2{4, 3}, c4 = c2;
-    std::cout << c1 << c2;
+    std::cout << c1 << c2 << c4 << c1.get_nr_haine() << c2.get_nr_haine() << c4.get_nr_haine() << "\n";
+    c4.adauga_haine();
     // c4 = c2;
     // c4.operator=(c1);
     std::cout << "inainte de c3\n"; {

@@ -20,6 +20,7 @@ public:
     [[nodiscard]] int get_nr_haine() const;
 
     friend std::ostream &operator<<(std::ostream &os, const Cuier &cuier);
+    void adauga_haine();
 };
 
 
