@@ -3,151 +3,107 @@
 #include <ostream>
 #include <vector>
 
+#include "Cuier.h"
+#include "Sala.h"
 #include "include/Example.h"
 // This also works if you do not want `include/`, but some editors might not like it
 // #include "Example.h"
 
-class PanouIluminare {
-    bool aprins;
-    int brightness;
-    std::string firma;
 
+class Baza {
+private: // (1)
+protected:
+    int x;
+    void f() { std::cout << "f\n"; }
 public:
-    PanouIluminare(bool aprins, int brightness, const std::string &firma)
-        : aprins(aprins),
-          brightness(brightness),
-          firma(firma) {
+Baza(const Baza &other)
+        : x(other.x) {
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const PanouIluminare &obj) {
-        return os
-               << "aprins: " << obj.aprins
-               << " brightness: " << obj.brightness
-               << " firma: " << obj.firma;
-    }
-};
-
-class GrupIluminare {
-    std::vector<PanouIluminare> panouri;
-
-public:
-    explicit GrupIluminare(const std::vector<PanouIluminare> &panouri)
-        : panouri(panouri) {
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, const GrupIluminare &grup) {
-        os << "panouri:\n";
-        for (const PanouIluminare &panou: grup.panouri) {
-            os << panou << "\n";
-        }
-        return os;
-    }
-};
-
-class Cuier {
-    int m_nr_haine;
-    int m_nr_randuri;
-
-public:
-    Cuier(int nr_haine, int nr_randuri) : m_nr_haine(nr_haine), m_nr_randuri(nr_randuri) {
-        std::cout << "Cuier nr_haine: " << nr_haine << "\n";
-    }
-
-    ~Cuier() {
-        std::cout << "~Cuier nr_randuri: " << m_nr_randuri << "\n";
-    }
-
-    Cuier(const Cuier &originalu) : m_nr_haine(originalu.m_nr_haine), m_nr_randuri(originalu.m_nr_randuri) {
-        std::cout << "Constr de copiere cuier " << originalu.m_nr_haine << "\n";
-    }
-
-    Cuier &operator=(const Cuier &originalu) {
-        if (this == &originalu) {
-            return *this;
-        }
-        m_nr_haine = originalu.m_nr_haine;
-        m_nr_randuri = originalu.m_nr_randuri;
-        std::cout << "op= cuier\n";
-        return *this;
-    }
-
-    [[nodiscard]] int get_nr_haine() const {
-        return m_nr_haine;
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, const Cuier &cuier) {
-        os << cuier.m_nr_haine << " " << cuier.m_nr_randuri;
-        return os;
-    }
-};
-
-
-class Sala {
-    std::vector<GrupIluminare> grupLumina;
-    int numar{};
-    double zgomot{};
-    Cuier m_cuier;
-
-public:
-    friend std::ostream &operator<<(std::ostream &os, const Sala &sala) {
-        os << "grupLumina:\n";
-        for (const auto &corp: sala.grupLumina) {
-            os << corp << "\n";
-        }
-        os
-                << " numar: " << sala.numar
-                << " zgomot: " << sala.zgomot
-                << " m_cuier: " << sala.m_cuier;
-        return os;
-    }
-
-    explicit Sala(const Cuier &cuier) : m_cuier(cuier) {
-    }
-
-    Sala(const std::vector<GrupIluminare> &grup_lumina, const Cuier &m_cuier)
-        : grupLumina(grup_lumina),
-          m_cuier(m_cuier) {
-    }
-
-    Sala(const Sala &other)
-        : grupLumina(other.grupLumina),
-          numar(other.numar),
-          zgomot(other.zgomot),
-          m_cuier(other.m_cuier) {
-    }
-
-    Sala &operator=(const Sala &other) {
+    Baza & operator=(const Baza &other) {
         if (this == &other)
             return *this;
-        grupLumina = other.grupLumina;
-        numar = other.numar;
-        zgomot = other.zgomot;
-        m_cuier = other.m_cuier;
+        x = other.x;
         return *this;
     }
 
-    Sala(const std::vector<GrupIluminare> &grup_lumina, int numar, double zgomot, const Cuier &m_cuier)
-        : grupLumina(grup_lumina),
-          numar(numar),
-          zgomot(zgomot),
-          m_cuier(m_cuier) {
+    explicit Baza(int x_) : x(x_) { std::cout << "Constructor Bază: " << x << "\n"; f(); }
+    void g() { std::cout << "g\n"; }
+};
+
+class Derivata : protected Baza {
+    int y{};
+public:
+Derivata(const Derivata &other)
+        : Baza(other),
+          y(other.y) {
     }
 
-    void set_grup_lumina(const std::vector<GrupIluminare> &grup_lumina) {
-        grupLumina = grup_lumina;
+    Derivata & operator=(const Derivata &other) {
+        if (this == &other)
+            return *this;
+        Baza::operator =(other);
+        y = other.y;
+        return *this;
     }
 
-    void set_zgomot(double zgomot_) {
-        this->zgomot = zgomot_;
+    Derivata() : Baza(1) { std::cout << "Constructor 1 Derivată: " << x << "\n"; f(); }
+ explicit Derivata(int y)
+        : Baza(2), y(y) {
     }
 
-    void set_numar(int numar_) {
-        this->numar = numar_;
+};
+
+class Derivata2 : public Derivata {
+    int k;
+    int abc;
+public:
+    Derivata2(int y, int k, int abc)
+        : Derivata(y),
+          k(k),
+          abc(abc) {
     }
+
+    Derivata2(const Derivata2 &other)
+        : Derivata(other) {
+    }
+ explicit Derivata2(const Derivata &other)
+        : Derivata(other) {
+    }
+
+    explicit Derivata2(int y)
+        : Derivata(y) {
+    }
+
+    Derivata2 & operator=(const Derivata2 &other) {
+        if (this == &other)
+            return *this;
+        Derivata::operator =(other);
+        return *this;
+    }
+
+    Derivata2() : Derivata() { std::cout << "Constructor 1 Derivată2: " << x << "\n"; f(); }
+};
+
+class curs {
+    std::string prof;
+    int nr = 10;
+public:
+    curs(const std::string& prof_) : prof(prof_) { std::cout << "constructor curs: " << prof << "\n"; }
+    curs(const std::string& prof_, int nr_) : prof(prof_), nr(nr_) { std::cout << "constructor curs: " << prof << "\n"; }
+    curs(int nr_, const std::string& prof_) : prof(prof_), nr(nr_) { std::cout << "constructor curs: " << prof << "\n"; }
+    friend std::ostream& operator<<(std::ostream& os, const curs& c) { os << "curs: " << c.prof << "\n"; return os; }
 };
 
 
+class curs_obligatoriu : public curs {
+    using curs::curs;
+};
+
 int main() {
+    curs_obligatoriu oop{"test"};
+    Baza b(2);
+    Derivata d;
     Cuier c1{2, 2}, c2{4, 3}, c4 = c2;
     std::cout << c1 << c2;
     // c4 = c2;
