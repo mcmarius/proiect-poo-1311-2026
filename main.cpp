@@ -67,7 +67,7 @@ public:
     explicit Derivata(int y)
         : Baza(2), y(y) {
     }
-    void f2() {
+    static void f2() {
         std::cout << "f2\n";
     }
 };
